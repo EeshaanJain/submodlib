@@ -12,8 +12,7 @@ Defines helper functions and compares performance of two different approaches of
 #include<cmath>
 #include<unordered_map>
 #include<algorithm>
-#include<chrono>
-#include<random>
+#include <chrono>
 #include <iomanip>
 #include"helper.h"
 #include <iostream>
@@ -346,60 +345,4 @@ int main(int argc, char** argv) {
 	}
 }
 
-ll matroid_rank(std::unordered_set<std::unordered_set<ll>, hash_function> &I)
-{
-	ll rank = -1;
-	for (auto independent_set : I)
-	{
-		rank = std::max(rank, (ll)independent_set.size());
-	}
-	return rank;
-}
 
-ll matroid_rank(std::unordered_set<ll> &S, std::unordered_set<std::unordered_set<ll>, hash_function> &I)
-{
-	ll rank = -1;
-	for (auto independent_set : I)
-	{
-		if (std::includes(S.begin(), S.end(), independent_set.begin(), independent_set.end()))
-		{
-			rank = std::max(rank, (ll)independent_set.size());
-		}
-	}
-	return rank;
-}
-
-ll get_index(std::unordered_set<ll> &s, ll k)
-{
-	ll idx = 1;
-    for (auto u : s) {
- 
-        if (u == k)
-            return idx;
- 
-        idx++;
-    }
-    return -1;
-}
-
-std::unordered_set<ll> R(std::vector<double> x, std::unordered_set<ll> S, std::unordered_set<ll> &groundSet, double eps, std::mt19937_64 rng, std::uniform_real_distribution<double> unif)
-{
-	std::vector<double> probs = x;
-	for (auto it : S)
-	{
-		ll idx = get_index(groundSet, it);
-		probs[idx] += eps;
-	}
-
-	std::unordered_set<ll> sampled_set;
-	ll counter = 0;
-	for (auto it : groundSet)
-	{
-		if (unif(rng) <= probs[counter])
-		{
-			sampled_set.insert(it);
-		}
-		counter++;
-	}
-	return sampled_set;
-}
