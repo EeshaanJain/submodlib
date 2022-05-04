@@ -5,7 +5,7 @@
 #include <random>
 #include <chrono>
 #include <algorithm>
-#include "helper.h"
+#include "../utils/helper.h"
 
 class ContinuousGreedyOptimizer
 {

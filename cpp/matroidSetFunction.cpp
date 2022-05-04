@@ -5,7 +5,7 @@
 #include <utility>
 #include <string>
 #include "matroidSetFunction.h"
-#include "ContinuousGreedyOptimizer.h"
+#include "./optimizers/ContinuousGreedyOptimizer.h"
 
 std::vector<std::vector<double>> MatroidSetFunction::matroidGain(std::vector<std::vector<double>> y) {}
 std::vector<std::vector<double>> MatroidSetFunction::getMaxIndependenceSet(std::vector<std::vector<double>> const &w) {}
