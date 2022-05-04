@@ -26,7 +26,7 @@ std::unordered_set<ll> set_intersection(std::unordered_set<ll> const &a, std::un
 std::unordered_set<ll> set_union(std::unordered_set<ll> const &a, std::unordered_set<ll> const &b);
 
 // Ipsit, Sibasis, Eeshaan
-struct hash_function
+struct hash_function_set
 {
 	std::size_t operator()(const std::unordered_set<ll> &s) const
 	{
@@ -48,7 +48,7 @@ struct pair_hash
 	}
 };
 
-ll matroid_rank(std::unordered_set<std::unordered_set<ll>, hash_function> &I);
-ll matroid_rank(std::unordered_set<ll> &S, std::unordered_set<std::unordered_set<ll>, hash_function> &I);
+ll matroid_rank(std::unordered_set<std::unordered_set<ll>, hash_function_set> &I);
+ll matroid_rank(std::unordered_set<ll> &S, std::unordered_set<std::unordered_set<ll>, hash_function_set> &I);
 ll get_index(std::unordered_set<ll> &s, ll k);
 std::unordered_set<ll> R(std::vector<double> &x, std::unordered_set<ll> &S, std::unordered_set<ll> &groundSet, double eps, std::mt19937_64 rng, std::uniform_real_distribution<double> unif);

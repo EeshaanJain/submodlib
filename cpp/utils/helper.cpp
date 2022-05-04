@@ -381,7 +381,7 @@ int main(int argc, char **argv)
 	}
 }
 
-ll matroid_rank(std::unordered_set<std::unordered_set<ll>, hash_function> &I)
+ll matroid_rank(std::unordered_set<std::unordered_set<ll>, hash_function_set> &I)
 {
 	ll rank = -1;
 	for (auto independent_set : I)
@@ -391,7 +391,7 @@ ll matroid_rank(std::unordered_set<std::unordered_set<ll>, hash_function> &I)
 	return rank;
 }
 
-ll matroid_rank(std::unordered_set<ll> &S, std::unordered_set<std::unordered_set<ll>, hash_function> &I)
+ll matroid_rank(std::unordered_set<ll> &S, std::unordered_set<std::unordered_set<ll>, hash_function_set> &I)
 {
 	ll rank = -1;
 	for (auto independent_set : I)

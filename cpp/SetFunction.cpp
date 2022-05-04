@@ -30,10 +30,13 @@ std::vector<std::pair<ll, double>> SetFunction::maximize(std::string optimizer, 
 		std::cout << "Invalid Optimizer" << std::endl;
 	}
 }
-std::unordered_set<ll> SetFunction::maximize(std::string optimizer, std::unordered_set<std::unordered_set<ll>, hash_function> &I, float epsilon=0.1, bool verbose=false, bool showProgress=true, const std::vector<float>& costs=std::vector<float>())
+std::unordered_set<ll> SetFunction::maximize(std::string optimizer, std::unordered_set<std::unordered_set<ll>, hash_function_set> &I, float epsilon=0.1, bool verbose=false, bool showProgress=true, const std::vector<float>& costs=std::vector<float>())
 {
 	if (optimizer == "AcceleratedContinuousGreedy") {
 		return AcceleratedContinuousGreedyOptimizer().maximize(*this, I, epsilon, verbose, showProgress, costs);
+	}
+	else {
+		throw "Error: Invalid Optimizer";
 	}
 }
 void SetFunction::cluster_init(ll n_, std::vector<std::vector<float>> const &k_dense_, std::unordered_set<ll> const &ground_, bool partial, float lambda){}
