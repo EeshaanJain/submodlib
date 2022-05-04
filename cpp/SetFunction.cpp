@@ -9,6 +9,7 @@
 #include"optimizers/LazyGreedyOptimizer.h"
 #include"optimizers/StochasticGreedyOptimizer.h"
 #include"optimizers/LazierThanLazyGreedyOptimizer.h"
+#include"optimizers/AcceleratedContinuousGreedyOptimizer.h"
 
 double SetFunction::evaluate(std::unordered_set<ll> const &X){}
 double SetFunction::evaluateWithMemoization(std::unordered_set<ll> const &X){}
@@ -27,6 +28,12 @@ std::vector<std::pair<ll, double>> SetFunction::maximize(std::string optimizer, 
         return LazierThanLazyGreedyOptimizer().maximize(*this, budget, stopIfZeroGain, stopIfNegativeGain, epsilon, verbose, showProgress, costs, costSensitiveGreedy);
 	} else {
 		std::cout << "Invalid Optimizer" << std::endl;
+	}
+}
+std::unordered_set<ll> SetFunction::maximize(std::string optimizer, std::unordered_set<std::unordered_set<ll>, hash_function> &I, float epsilon=0.1, bool verbose=false, bool showProgress=true, const std::vector<float>& costs=std::vector<float>())
+{
+	if (optimizer == "AcceleratedContinuousGreedy") {
+		return AcceleratedContinuousGreedyOptimizer().maximize(*this, I, epsilon, verbose, showProgress, costs);
 	}
 }
 void SetFunction::cluster_init(ll n_, std::vector<std::vector<float>> const &k_dense_, std::unordered_set<ll> const &ground_, bool partial, float lambda){}

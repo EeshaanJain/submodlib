@@ -8,7 +8,7 @@ class MatroidSetFunction
 {
 public:
     std::vector<std::vector<double>> y;
-    std::vector<std::vector<double>> MatroidSetFunction::maximize(std::string optimizer, double budget, bool stopIfZeroGain, bool stopIfNegativeGain, double epsilon, bool verbose, bool showProgress, const std::vector<std::vector<double>> &costs, bool costSensitiveGreedy);
+    std::vector<std::vector<double>> maximize(std::string optimizer, double budget, bool stopIfZeroGain, bool stopIfNegativeGain, double epsilon, bool verbose, bool showProgress, const std::vector<std::vector<double>> &costs, bool costSensitiveGreedy);
     virtual std::vector<std::vector<double>> matroidGain(std::vector<std::vector<double>> y);
     virtual std::vector<std::vector<double>> getMaxIndependenceSet(std::vector<std::vector<double>> const &w);
     virtual std::vector<std::vector<ll>> evaluateFinalSet();

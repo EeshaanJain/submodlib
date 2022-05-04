@@ -49,7 +49,7 @@ std::unordered_set<ll> AcceleratedContinuousGreedyOptimizer::decreasing_threshol
     return B;
 }
 
-std::vector<double> AcceleratedContinuousGreedyOptimizer::maximize(SetFunction &f_obj, std::unordered_set<std::unordered_set<ll>, hash_function> I, float epsilon=0.1, bool verbose=false, bool showProgress=true, const std::vector<float>& costs=std::vector<float>())
+std::vector<double> AcceleratedContinuousGreedyOptimizer::maximize_fractional(SetFunction &f_obj, std::unordered_set<std::unordered_set<ll>, hash_function> I, float epsilon=0.1)
 {
     std::unordered_set<ll> groundSet = f_obj.getEffectiveGroundSet();
     ll n = groundSet.size();
@@ -157,4 +157,11 @@ std::unordered_set<ll>  AcceleratedContinuousGreedyOptimizer::pipage_rounding(Se
         counter++;
     }
     return greedy_set;
+}
+
+std::unordered_set<ll> AcceleratedContinuousGreedyOptimizer::maximize(SetFunction &f_obj, std::unordered_set<std::unordered_set<ll>, hash_function> I, float epsilon=0.1, bool verbose=false, bool showProgress=true, const std::vector<float>& costs=std::vector<float>())
+{
+    std::vector<double> x = maximize_fractional(f_obj, I, epsilon);
+    std::unordered_set<ll> greedySet = pipage_rounding(f_obj, x, I);
+    return greedySet;
 }
