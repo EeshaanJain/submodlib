@@ -7,29 +7,39 @@
 #include <cmath>
 #include <utility>
 #include "ContinuousGreedyOptimizer.h"
-#include "../utils/helper.h"
 
 ContinuousGreedyOptimizer::ContinuousGreedyOptimizer()
 {
-    rng.seed(ss);
+    // std::random_device rd;
+    // rng.seed(rd());
 }
 
-std::vector<std::vector<double>> ContinuousGreedyOptimizer::maximize(MatroidSetFunction &f_obj, double delta = -1, double epsilon = 0.1, bool verbose = false, bool showProgress = true, const std::vector<std::vector<double>> &costs = std::vector<std::vector<double>>())
+std::vector<std::vector<double>> ContinuousGreedyOptimizer::maximize(MatroidSetFunction &f_obj, bool verbose = false, bool showProgress = true, const std::vector<std::vector<double>> &costs = std::vector<std::vector<double>>())
 {
     // std::unordered_set<ll> groundSet = f_obj.getEffectiveGroundSet();
     ll n = costs.size();
     ll m = costs[0].size();
-    ll t = 0;
+    double t = 0;
 
     std::vector<std::vector<double>> w(n, std::vector<double>(m, 0));
 
     while (t < 1)
     {
+        // std::cout << t << " && " << f_obj.delta << std::endl;
         w = f_obj.matroidGain(f_obj.y);
+
+        // for (auto &row : w)
+        // {
+        //     for (auto &val : row)
+        //     {
+        //         std::cout << val << " ";
+        //     }
+        //     std::cout << std::endl;
+        // }
 
         f_obj.getMaxIndependenceSet(w);
 
-        t = t + delta;
+        t = t + f_obj.delta;
     }
 
     // return f_obj.evaluateFinalSet();

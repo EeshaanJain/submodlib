@@ -7,20 +7,19 @@
 #include <iterator>
 #include <map>
 #include <random>
-#include "../utils/helper.h"
-#include "Gap.h"
+#include "Sap.h"
 
-Gap::Gap() {}
+Sap::Sap() {}
 
 // Constructor for dense mode (kenel supplied)
 
 // For cluster mode
-Gap::Gap(std::vector<std::vector<double>> costs, std::vector<std::vector<std::unordered_set<ll>>> input_feasible_set)
+Sap::Sap(std::vector<std::vector<double>> costs, std::vector<std::vector<std::unordered_set<ll>>> input_feasible_set)
 {
     m = costs.size();
     n = costs[0].size();
 
-    delta = 1 / (9 * m * m);
+    delta = 1.0 / (9.0 * n * n);
 
     // Initialize the cost matrix
     cost = costs;
@@ -50,13 +49,16 @@ Gap::Gap(std::vector<std::vector<double>> costs, std::vector<std::vector<std::un
         }
         item_set.push_back(temp);
     }
+
+    // std::cout << "constructer created" << std::endl;
 }
 
-std::vector<std::vector<double>> Gap::getMaxIndependenceSet(std::vector<std::vector<double>> const &w)
+std::vector<std::vector<double>> Sap::getMaxIndependenceSet(std::vector<std::vector<double>> const &w)
 {
 
     for (int j = 0; j < n; j++)
     {
+        // std::cout << "entry j: " << j << std::endl;
         double max_so_far = 0;
         int max_so_far_index = 0;
 
@@ -65,10 +67,10 @@ std::vector<std::vector<double>> Gap::getMaxIndependenceSet(std::vector<std::vec
             double score = 0;
             for (auto elem : feasible_set[j][i])
             {
-                score += w[elem][j];
+                score += w[j][elem];
             }
 
-            if (score > max_so_far)
+            if (score >= max_so_far)
             {
                 max_so_far = score;
                 max_so_far_index = i;
@@ -81,7 +83,7 @@ std::vector<std::vector<double>> Gap::getMaxIndependenceSet(std::vector<std::vec
     return y;
 }
 
-std::vector<std::vector<double>> Gap::matroidGain(std::vector<std::vector<double>> y)
+std::vector<std::vector<double>> Sap::matroidGain(std::vector<std::vector<double>> y)
 {
     std::vector<std::vector<double>> w(n, std::vector<double>(m, 0));
 
@@ -104,21 +106,27 @@ std::vector<std::vector<double>> Gap::matroidGain(std::vector<std::vector<double
             }
         }
 
+        // std::cout << "sampling success " << i << std::endl;
+
         for (int e = 0; e < m; e++)
         {
             for (ll j = 0; j < n; j++)
             {
                 double opt = 0;
 
+                // std::cout << "idhar " << e << std::endl;
+
                 for (auto p : item_set[e])
                 {
+                    // std::cout << "here " << p.first << " " << p.second << std::endl;
                     if (R_t.find(p) != R_t.end())
                     {
+                        // std::cout << p.first << std::endl;
                         opt = std::max(opt, cost[e][p.first]);
                     }
                 }
 
-                w[e][j] += opt;
+                w[j][e] = std::max(0.0, cost[e][j] - opt);
             }
         }
     }
@@ -134,7 +142,7 @@ std::vector<std::vector<double>> Gap::matroidGain(std::vector<std::vector<double
     return w;
 }
 
-std::vector<std::vector<ll>> Gap::evaluateFinalSet()
+std::vector<std::vector<ll>> Sap::evaluateFinalSet()
 {
     std::vector<std::vector<ll>> final_set;
     for (int i = 0; i < m; i++)
@@ -149,11 +157,14 @@ std::vector<std::vector<ll>> Gap::evaluateFinalSet()
         int score = 0;
 
         int k = 0;
-        while (score + y[i][k] < sample)
+        while ((k < (int)y[i].size() - 1) && score + y[i][k] < sample)
         {
             score += y[i][k];
             k++;
         }
+
+        // std::cout << i << " " << k << " " << sample << std::endl;
+        // std::cout << (int)y[0].size() << " " << (int)y[1].size() << std::endl;
 
         for (auto e : feasible_set[i][k])
         {

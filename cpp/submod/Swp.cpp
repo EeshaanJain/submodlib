@@ -7,7 +7,6 @@
 #include <iterator>
 #include <map>
 #include <random>
-#include "../utils/helper.h"
 #include "Swp.h"
 
 Swp::Swp() {}
@@ -15,13 +14,12 @@ Swp::Swp() {}
 // Constructor for dense mode (kenel supplied)
 
 // For cluster mode
-Swp::Swp(std::vector<std::vector<double>> costs)
+Swp::Swp(std::vector<std::vector<double>> costs, ll groundSetSize)
 {
     n = costs.size();
-    m = costs[0].size();
+    m = groundSetSize;
 
-    delta = 1 / (9 * m * m);
-
+    delta = 1.0 / (9.0 * m * m);
     // Initialize the cost matrix
     cost = costs;
 
@@ -64,31 +62,47 @@ std::vector<std::vector<double>> Swp::matroidGain(std::vector<std::vector<double
 
     for (int e = 0; e < n; e++)
     {
-        for (ll j = 0; j < m; j++)
+        for (ll i = 0; i < num_samples; i++)
         {
-            double w_e = 0;
-            for (ll i = 0; i < num_samples; i++)
+            std::unordered_set<ll> R;
+            ll index = 0;
+
+            for (ll jj = 0; jj < m; jj++)
             {
-                std::unordered_set<ll> R;
-                for (ll jj = 0; jj < m; jj++)
+                std::uniform_real_distribution<double> unif;
+                double sample = unif(rng);
+
+                if (sample < y[e][jj])
                 {
-                    std::uniform_real_distribution<double> unif;
-                    double sample = unif(rng);
-                    if (sample < y[e][jj])
-                    {
-                        R.insert(jj);
-                    }
+                    R.insert(jj);
+                    index += pow(2, jj);
                 }
+            }
+
+            for (ll j = 0; j < m; j++)
+            {
+                double w_e = 0;
 
                 double gain = 0;
                 if (R.find(j) == R.end())
                 {
-                    gain = cost[e][j];
+                    gain = cost[e][index + pow(2, j)] - cost[e][index];
                 }
                 w_e += gain;
+                w[e][j] = w_e;
             }
-            w_e = w_e / num_samples;
-            w[e][j] = w_e;
+
+            // std::cout << "* " << j << std::endl;
+        }
+
+        // std::cout << "*** " << e << std::endl;
+    }
+
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            w[i][j] /= num_samples;
         }
     }
 
@@ -112,12 +126,15 @@ std::vector<std::vector<ll>> Swp::evaluateFinalSet()
         int score = 0;
 
         int k = 0;
-        while (score + y[k][i] < sample)
+        while (k < n - 1 && score + y[k][i] < sample)
         {
             score += y[k][i];
+            // std::cout << k << " " << sample << std::endl;
             k++;
         }
 
         final_set.push_back(std::vector<ll>{k, i});
     }
+
+    return final_set;
 }
