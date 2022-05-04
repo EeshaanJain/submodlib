@@ -5,7 +5,6 @@
 #include <random>
 #include <chrono>
 #include <algorithm>
-#include"../utils/helper.h"
 
 class AcceleratedContinuousGreedyOptimizer
 {
@@ -16,7 +15,7 @@ class AcceleratedContinuousGreedyOptimizer
 	    std::seed_seq ss{uint32_t(time_seed & 0xffffffff), uint32_t(time_seed >> 32)};
         AcceleratedContinuousGreedyOptimizer();
         std::vector<double> maximize_fractional(SetFunction &f_obj, std::unordered_set<std::unordered_set<ll>, hash_function_set> I, float epsilon=0.1);
-        std::unordered_set<ll> decreasing_threshold(SetFunction &f_obj, std::vector<double> &x, double epsilon, std::unordered_set<std::unordered_set<ll>, hash_function_set> I);
+        std::unordered_set<ll> decreasing_threshold(SetFunction &f_obj, std::vector<double> &x, float epsilon, std::unordered_set<std::unordered_set<ll>, hash_function_set> I);
         std::unordered_set<ll> pipage_rounding(SetFunction &f_obj, std::vector<double> &x, std::unordered_set<std::unordered_set<ll>, hash_function_set> I);
         std::unordered_set<ll> maximize(SetFunction &f_obj, std::unordered_set<std::unordered_set<ll>, hash_function_set> I, float epsilon=0.1, bool verbose=false, bool showProgress=true, const std::vector<float>& costs=std::vector<float>());
 };

@@ -285,157 +285,99 @@ std::unordered_set<ll> set_union(std::unordered_set<ll> const &a, std::unordered
 	return c;
 }
 
-int main(int argc, char **argv)
-{
-	std::cout << "Checking kernel values" << std::endl;
-	std::vector<std::vector<float>> test_features{
-		{4.5, 13.5},
-		{5, 13.5},
-		{5.5, 13.5}};
-	std::vector<std::vector<float>> kernel1;
-	std::vector<std::vector<float>> kernel2;
-	std::cout << "Computing sample kernel using current method: \n";
-	kernel1 = create_kernel(test_features, "euclidean", 3);
-	std::cout << "[ ";
-	for (auto row : kernel1)
-	{
-		std::cout << "[";
-		for (auto column : row)
-		{
-			std::cout << column << " ";
-		}
-		std::cout << "]\n";
-	}
-	std::cout << "]\n";
-	std::cout << "Computing sample kernel using new method: \n";
-	kernel2 = create_square_kernel_dense(test_features, "euclidean");
-	std::cout << "[ ";
-	for (auto row : kernel2)
-	{
-		std::cout << "[";
-		for (auto column : row)
-		{
-			std::cout << column << " ";
-		}
-		std::cout << "]\n";
-	}
-	std::cout << "]\n";
-	int num_executions = 10;
-	int num_places = 6;
-	int num_features = 1024;
-	std::vector<int> params{50, 100, 200, 500, 1000, 5000};
-	// std::vector<int> params{ 50, 100 };
-	for (auto num_samples : params)
-	{
-		std::ofstream csvfile;
-		csvfile.open("cpp_kernel_creation_timings_" + std::to_string(num_samples) + "_.csv");
-		csvfile << "Num Samples, Function, Time\n";
-		std::cout << "Running for " << num_samples << " samples\n";
-		std::vector<std::vector<float>> features;
-		for (int i = 0; i < num_samples; i++)
-		{
-			std::vector<float> featuresOfOneElement;
-			for (int j = 0; j < num_features; j++)
-			{
-				featuresOfOneElement.push_back((float)(rand() % 10) / 5.0);
-			}
-			features.push_back(featuresOfOneElement);
-		}
-		csvfile << num_samples << ","
-				<< "current,";
-		std::cout << "Computing kernel using current method\n";
-		double totalTime = 0;
-		for (int i = 0; i < num_executions; i++)
-		{
-			std::vector<std::vector<float>> kernel;
-			auto start = std::chrono::high_resolution_clock::now();
-			kernel = create_kernel(features, "euclidean", num_samples);
-			auto stop = std::chrono::high_resolution_clock::now();
-			double duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count();
-			duration *= 1e-9;
-			std::cout << "Time taken in seconds: " << std::fixed << duration << std::setprecision(9) << std::endl;
-			totalTime += duration;
-			csvfile << duration << ",";
-		}
-		double averageTime = totalTime / num_executions;
-		csvfile << averageTime << "\n";
-		csvfile << num_samples << ","
-				<< "new,";
-		std::cout << "Computing kernel using new method\n";
-		totalTime = 0;
-		for (int i = 0; i < num_executions; i++)
-		{
-			std::vector<std::vector<float>> kernel;
-			auto start = std::chrono::high_resolution_clock::now();
-			kernel = create_square_kernel_dense(features, "euclidean");
-			auto stop = std::chrono::high_resolution_clock::now();
-			double duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count();
-			duration *= 1e-9;
-			std::cout << "Time taken in seconds: " << std::fixed << duration << std::setprecision(9) << std::endl;
-			totalTime += duration;
-			csvfile << duration << ",";
-		}
-		averageTime = totalTime / num_executions;
-		csvfile << averageTime << "\n";
-		csvfile.close();
-	}
-}
+// int main(int argc, char **argv)
+// {
+// 	std::cout << "Checking kernel values" << std::endl;
+// 	std::vector<std::vector<float>> test_features{
+// 		{4.5, 13.5},
+// 		{5, 13.5},
+// 		{5.5, 13.5}};
+// 	std::vector<std::vector<float>> kernel1;
+// 	std::vector<std::vector<float>> kernel2;
+// 	std::cout << "Computing sample kernel using current method: \n";
+// 	kernel1 = create_kernel(test_features, "euclidean", 3);
+// 	std::cout << "[ ";
+// 	for (auto row : kernel1)
+// 	{
+// 		std::cout << "[";
+// 		for (auto column : row)
+// 		{
+// 			std::cout << column << " ";
+// 		}
+// 		std::cout << "]\n";
+// 	}
+// 	std::cout << "]\n";
+// 	std::cout << "Computing sample kernel using new method: \n";
+// 	kernel2 = create_square_kernel_dense(test_features, "euclidean");
+// 	std::cout << "[ ";
+// 	for (auto row : kernel2)
+// 	{
+// 		std::cout << "[";
+// 		for (auto column : row)
+// 		{
+// 			std::cout << column << " ";
+// 		}
+// 		std::cout << "]\n";
+// 	}
+// 	std::cout << "]\n";
+// 	int num_executions = 10;
+// 	int num_places = 6;
+// 	int num_features = 1024;
+// 	std::vector<int> params{50, 100, 200, 500, 1000, 5000};
+// 	// std::vector<int> params{ 50, 100 };
+// 	for (auto num_samples : params)
+// 	{
+// 		std::ofstream csvfile;
+// 		csvfile.open("cpp_kernel_creation_timings_" + std::to_string(num_samples) + "_.csv");
+// 		csvfile << "Num Samples, Function, Time\n";
+// 		std::cout << "Running for " << num_samples << " samples\n";
+// 		std::vector<std::vector<float>> features;
+// 		for (int i = 0; i < num_samples; i++)
+// 		{
+// 			std::vector<float> featuresOfOneElement;
+// 			for (int j = 0; j < num_features; j++)
+// 			{
+// 				featuresOfOneElement.push_back((float)(rand() % 10) / 5.0);
+// 			}
+// 			features.push_back(featuresOfOneElement);
+// 		}
+// 		csvfile << num_samples << ","
+// 				<< "current,";
+// 		std::cout << "Computing kernel using current method\n";
+// 		double totalTime = 0;
+// 		for (int i = 0; i < num_executions; i++)
+// 		{
+// 			std::vector<std::vector<float>> kernel;
+// 			auto start = std::chrono::high_resolution_clock::now();
+// 			kernel = create_kernel(features, "euclidean", num_samples);
+// 			auto stop = std::chrono::high_resolution_clock::now();
+// 			double duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count();
+// 			duration *= 1e-9;
+// 			std::cout << "Time taken in seconds: " << std::fixed << duration << std::setprecision(9) << std::endl;
+// 			totalTime += duration;
+// 			csvfile << duration << ",";
+// 		}
+// 		double averageTime = totalTime / num_executions;
+// 		csvfile << averageTime << "\n";
+// 		csvfile << num_samples << ","
+// 				<< "new,";
+// 		std::cout << "Computing kernel using new method\n";
+// 		totalTime = 0;
+// 		for (int i = 0; i < num_executions; i++)
+// 		{
+// 			std::vector<std::vector<float>> kernel;
+// 			auto start = std::chrono::high_resolution_clock::now();
+// 			kernel = create_square_kernel_dense(features, "euclidean");
+// 			auto stop = std::chrono::high_resolution_clock::now();
+// 			double duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count();
+// 			duration *= 1e-9;
+// 			std::cout << "Time taken in seconds: " << std::fixed << duration << std::setprecision(9) << std::endl;
+// 			totalTime += duration;
+// 			csvfile << duration << ",";
+// 		}
+// 		averageTime = totalTime / num_executions;
+// 		csvfile << averageTime << "\n";
+// 		csvfile.close();
+// 	}
+// }
 
-ll matroid_rank(std::unordered_set<std::unordered_set<ll>, hash_function_set> &I)
-{
-	ll rank = -1;
-	for (auto independent_set : I)
-	{
-		rank = std::max(rank, (ll)independent_set.size());
-	}
-	return rank;
-}
-
-ll matroid_rank(std::unordered_set<ll> &S, std::unordered_set<std::unordered_set<ll>, hash_function_set> &I)
-{
-	ll rank = -1;
-	for (auto independent_set : I)
-	{
-		if (std::includes(S.begin(), S.end(), independent_set.begin(), independent_set.end()))
-		{
-			rank = std::max(rank, (ll)independent_set.size());
-		}
-	}
-	return rank;
-}
-
-ll get_index(std::unordered_set<ll> &s, ll k)
-{
-	ll idx = 1;
-	for (auto u : s)
-	{
-
-		if (u == k)
-			return idx;
-
-		idx++;
-	}
-	return -1;
-}
-
-std::unordered_set<ll> R(std::vector<double> x, std::unordered_set<ll> S, std::unordered_set<ll> &groundSet, double eps, std::mt19937_64 rng, std::uniform_real_distribution<double> unif)
-{
-	std::vector<double> probs = x;
-	for (auto it : S)
-	{
-		ll idx = get_index(groundSet, it);
-		probs[idx] += eps;
-	}
-
-	std::unordered_set<ll> sampled_set;
-	ll counter = 0;
-	for (auto it : groundSet)
-	{
-		if (unif(rng) <= probs[counter])
-		{
-			sampled_set.insert(it);
-		}
-		counter++;
-	}
-	return sampled_set;
-}

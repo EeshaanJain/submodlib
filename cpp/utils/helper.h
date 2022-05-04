@@ -1,6 +1,10 @@
 #include <unordered_set>
 #include <functional>
 #include <numeric>
+#include <vector>
+#include <chrono>
+#include <iomanip>
+#include <random>
 
 typedef long long int ll;
 float dot_prod(std::vector<float> &v1, std::vector<float> &v2);
@@ -47,8 +51,3 @@ struct pair_hash
 		return v.first * 31 + v.second;
 	}
 };
-
-ll matroid_rank(std::unordered_set<std::unordered_set<ll>, hash_function_set> &I);
-ll matroid_rank(std::unordered_set<ll> &S, std::unordered_set<std::unordered_set<ll>, hash_function_set> &I);
-ll get_index(std::unordered_set<ll> &s, ll k);
-std::unordered_set<ll> R(std::vector<double> &x, std::unordered_set<ll> &S, std::unordered_set<ll> &groundSet, double eps, std::mt19937_64 rng, std::uniform_real_distribution<double> unif);
